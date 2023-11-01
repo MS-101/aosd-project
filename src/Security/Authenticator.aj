@@ -8,9 +8,9 @@ public aspect Authenticator {
 	
 	private Scanner scanner = new Scanner(System.in);
 
-	private pointcut main() : execution(void Main.main(String[]));
-	private pointcut printHelp() : execution(void Console.printHelp());
-	private pointcut parseCommand(String command) : execution(boolean Console.parseCommand(String)) && args(command);
+	private pointcut main() : execution(void Logistics.Main.main(String[]));
+	private pointcut printHelp() : execution(void Logistics.Console.printHelp());
+	private pointcut parseCommand(String command) : execution(boolean Logistics.Console.parseCommand(String)) && args(command);
 	
 	before() : main() {
 		while (!requestLogin());
@@ -59,6 +59,10 @@ public aspect Authenticator {
 		}
 		else
 			return false;
+	}
+	
+	static User getCurrentUser() {
+		return currentUser;
 	}
 
 	static boolean hasPermission(Permission permission) {

@@ -1,3 +1,5 @@
+package Logistics;
+
 import java.util.*;
 
 public class Console {
@@ -17,7 +19,7 @@ public class Console {
 	
 	public void printHelp() {
 		System.out.println("Available basic commands:");
-		System.out.println("================================================================================================");
+		System.out.println("=========================");
 		System.out.println("help - prints this message");
 		System.out.println("product <command> - use product commands (type 'product help' for more instructions)");
 		System.out.println("order <command> - use order commands (type 'order help' for more instructions)");
@@ -31,8 +33,7 @@ public class Console {
 			System.out.println("Exiting application!");
 			
 			return false;
-		}
-		else if (tokens[0].equals("help"))
+		} else if (tokens[0].equals("help"))
 			printHelp();
 		else if (tokens[0].equals("order"))
 			orderManager.parseCommand(command.substring(tokens[0].length() + 1));

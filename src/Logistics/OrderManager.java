@@ -1,3 +1,5 @@
+package Logistics;
+
 import java.util.*;
 import java.util.Map.Entry;
 
@@ -11,7 +13,7 @@ public class OrderManager implements IConsoleManager {
 	
 	public void printHelp() {
 		System.out.println("Available order commands:");
-		System.out.println("=====================================================================================================");
+		System.out.println("=========================");
 		System.out.println("order help - prints this message");
 		System.out.println("order read - prints all existing orders");
 		System.out.println("order add description '<description>' items <item1ID>/<item1Count> <item2ID>/<item2Count> ... - create new order");
@@ -89,24 +91,14 @@ public class OrderManager implements IConsoleManager {
 	
 	public void readOrders() {
 		System.out.println("Printing orders:");
-		System.out.println();
-		System.out.println("ID | date | description | item/count");
-		System.out.println("====================================");
+		System.out.println("================");
 		
         for (Entry<Integer, Order> orderEntry : orders.entrySet()) {
         	int id = orderEntry.getKey();
             Order order = orderEntry.getValue();
             
-            String items = "";
-			for (OrderItem item : order.items) {
-				if (!items.isEmpty())
-					items += " ";
-				items += item.product.name + "/" + item.count;
-			}
-			
-		    System.out.println(id + " | " + order.date + " | " + order.description + " | " + items);
+		    System.out.println(id + " (id) | " + order.toString());
         }
-		System.out.println();
 	}
 	
 	public Order getOrder(int id) {
@@ -126,8 +118,8 @@ public class OrderManager implements IConsoleManager {
 	public void updateOrder(int id, String description, OrderItem[] items) {
 		Order order = getOrder(id);
 		if (order != null) {
-			order.description = description;
-			order.items = items;
+			order.setDescription(description);
+			order.setItems(items);
 			
 			System.out.println("Updated order with id " + id + ".");
 		} else {

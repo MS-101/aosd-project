@@ -1,3 +1,5 @@
+package Logistics;
+
 import java.util.*;
 import java.util.Map.Entry;
 
@@ -12,7 +14,7 @@ public class ProductManager implements IConsoleManager {
 	
 	public void printHelp() {
 		System.out.println("Available product commands:");
-		System.out.println("=====================================================================================================");
+		System.out.println("===========================");
 		System.out.println("product help - prints this message");
 		System.out.println("product read - prints all existing products");
 		System.out.println("product add name '<name>' description '<description>' - create new product");
@@ -62,17 +64,14 @@ public class ProductManager implements IConsoleManager {
 	
 	public void readProducts() {
 		System.out.println("Printing products:");
-		System.out.println();
-		System.out.println("ID | name | description");
-		System.out.println("=======================");
+		System.out.println("==================");
 		
         for (Entry<Integer, Product> productEntry : products.entrySet()) {
         	int id = productEntry.getKey();
             Product product = productEntry.getValue();
-			
-		    System.out.println(id + " | " + product.name + " | " + product.description);
+            
+			System.out.println(id + " (id) | " + product.toString());
         }
-		System.out.println();
 	}
 	
 	public Product getProduct(int id) {
@@ -92,8 +91,8 @@ public class ProductManager implements IConsoleManager {
 	public void updateProduct(int id, String name, String description) {
 		Product product = getProduct(id);
 		if (product != null) {
-			product.name = name;
-			product.description = description;
+			product.setName(name);
+			product.setDescription(description);
 			
 			System.out.println("Updated product with id " + id + ".");
 		} else {

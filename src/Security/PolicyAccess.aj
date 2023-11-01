@@ -1,16 +1,18 @@
 package Security;
 
+import Logistics.*;
+
 public aspect PolicyAccess {
 	pointcut productRead() : execution(void ProductManager.readProducts(..));
 	pointcut productAdd() : execution(void ProductManager.addProduct(..));
 	pointcut productUpdate() : execution(void ProductManager.updateProduct(..));
 	pointcut productRemove() : execution(void ProductManager.RemoveProduct(..));
-	
-	pointcut orderRead() : execution(void OrderManager.readOrders(..));
-	pointcut orderAdd() : execution(void OrderManager.addOrder(..));
-	pointcut orderUpdate() : execution(void OrderManager.updateOrder(..));
-	pointcut orderRemove() : execution(void OrderManager.removeOrder(..));
-	
+
+	pointcut orderRead() : execution(void Logistics.OrderManager.readOrders(..));
+	pointcut orderAdd() : execution(void Logistics.OrderManager.addOrder(..));
+	pointcut orderUpdate() : execution(void Logistics.OrderManager.updateOrder(..));
+	pointcut orderRemove() : execution(void Logistics.OrderManager.removeOrder(..));
+
 	void around() : productRead() {
 		if (Authenticator.hasPermission(PermissionManager.productRead))
 			proceed();

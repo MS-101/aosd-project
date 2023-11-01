@@ -1,3 +1,5 @@
+package Logistics;
+
 class Main {
     public static void main(String[] args) {
     	Console console = new Console();
