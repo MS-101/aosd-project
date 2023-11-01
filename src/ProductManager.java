@@ -4,7 +4,13 @@ import java.util.Map.Entry;
 public class ProductManager implements IConsoleManager {
 	private Map<Integer, Product> products = new HashMap<>();
 	
-	public void PrintHelp() {
+	public ProductManager() {
+		products.put(1, new Product("product1", "Lorem ipsum"));
+		products.put(2, new Product("product2", "Lorem ipsum"));
+		products.put(3, new Product("product3", "Lorem ipsum"));
+	}
+	
+	public void printHelp() {
 		System.out.println("Available product commands:");
 		System.out.println("=====================================================================================================");
 		System.out.println("product help - prints this message");
@@ -14,21 +20,21 @@ public class ProductManager implements IConsoleManager {
 		System.out.println("product remove <ID> - delete existing product");
 	}
 	
-	public void ParseCommand(String command) {
+	public void parseCommand(String command) {
 		String[] tokens = command.split(" ");
 		if (tokens[0].equals("help"))
-			PrintHelp();
+			printHelp();
 		else if (tokens[0].equals("read"))
-			PrintProducts();
+			readProducts();
 		else if (tokens[0].equals("add")) {
 			try {
 				tokens = command.split("'");
 				String name = tokens[1];
 				String description = tokens[3];
 				
-				AddProduct(name, description);
+				addProduct(name, description);
 			} catch (Exception ex) {
-				System.out.println("Parsing error.");	
+				System.out.println(ex);
 			}
 		} else if (tokens[0].equals("update")) {
 			try {
@@ -38,23 +44,23 @@ public class ProductManager implements IConsoleManager {
 				String name = tokens[1];
 				String description = tokens[3];
 				
-				UpdateProduct(id, name, description);
+				updateProduct(id, name, description);
 			} catch (Exception ex) {
-				System.out.println("Parsing error.");
+				System.out.println(ex);
 			}
 		} else if (tokens[0].equals("remove")) {
 			try {
 				int id = Integer.parseInt(tokens[1]);
-				RemoveProduct(id);
+				removeProduct(id);
 			} catch (Exception ex) {
-				System.out.println("Parsing error.");
+				System.out.println(ex);
 			}
 		} else {
 			System.out.println("Command unrecognised.");
 		}
 	}
 	
-	public void PrintProducts() {
+	public void readProducts() {
 		System.out.println("Printing products:");
 		System.out.println();
 		System.out.println("ID | name | description");
@@ -69,11 +75,11 @@ public class ProductManager implements IConsoleManager {
 		System.out.println();
 	}
 	
-	public Product GetProduct(int id) {
+	public Product getProduct(int id) {
 		return products.get(id);
 	}
 	
-	public void AddProduct(String name, String description) {
+	public void addProduct(String name, String description) {
 		int id = 1;
 		Set<Integer> productIDs = products.keySet();
 		if (!productIDs.isEmpty())
@@ -83,8 +89,8 @@ public class ProductManager implements IConsoleManager {
 		System.out.println("Created new product with id " + id + ".");
 	}
 	
-	public void UpdateProduct(int id, String name, String description) {
-		Product product = GetProduct(id);
+	public void updateProduct(int id, String name, String description) {
+		Product product = getProduct(id);
 		if (product != null) {
 			product.name = name;
 			product.description = description;
@@ -95,8 +101,8 @@ public class ProductManager implements IConsoleManager {
 		}
 	}
 	
-	public void RemoveProduct(int id) {
-		Product product = GetProduct(id);
+	public void removeProduct(int id) {
+		Product product = getProduct(id);
 		if (product != null) {
 			products.remove(id);
 			System.out.println("Deleted product with id " + id + "!");

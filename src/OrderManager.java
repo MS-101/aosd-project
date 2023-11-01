@@ -9,7 +9,7 @@ public class OrderManager implements IConsoleManager {
 		this.productManager = productManager;
 	}
 	
-	public void PrintHelp() {
+	public void printHelp() {
 		System.out.println("Available order commands:");
 		System.out.println("=====================================================================================================");
 		System.out.println("order help - prints this message");
@@ -19,12 +19,12 @@ public class OrderManager implements IConsoleManager {
 		System.out.println("order remove <ID> - delete existing order");
 	}
 	
-	public void ParseCommand(String command) {
+	public void parseCommand(String command) {
 		String[] tokens = command.split(" ");
 		if (tokens[0].equals("help"))
-			PrintHelp();
+			printHelp();
 		else if (tokens[0].equals("read"))
-			PrintOrders();
+			readOrders();
 		else if (tokens[0].equals("add")) {
 			try {
 				tokens = command.split("'");
@@ -37,7 +37,7 @@ public class OrderManager implements IConsoleManager {
 					String[] itemTokens = itemString.split("/");
 					
 					int productID = Integer.parseInt(itemTokens[0]);
-					Product product = productManager.GetProduct(productID);
+					Product product = productManager.getProduct(productID);
 					if (product == null)
 						throw new Exception("Product does not exist!");
 					int count = Integer.parseInt(itemTokens[1]);
@@ -45,9 +45,9 @@ public class OrderManager implements IConsoleManager {
 					items[i-2] = new OrderItem(product, count);
 				}
 					
-				AddOrder(description, items);
+				addOrder(description, items);
 			} catch (Exception ex) {
-				System.out.println("Parsing error.");	
+				System.out.println(ex);
 			}
 		} else if (tokens[0].equals("update")) {
 			try {
@@ -63,7 +63,7 @@ public class OrderManager implements IConsoleManager {
 					String[] itemTokens = itemString.split("/");
 					
 					int productID = Integer.parseInt(itemTokens[0]);
-					Product product = productManager.GetProduct(productID);
+					Product product = productManager.getProduct(productID);
 					if (product == null)
 						throw new Exception("Product does not exist!");
 					int count = Integer.parseInt(itemTokens[1]);
@@ -71,23 +71,23 @@ public class OrderManager implements IConsoleManager {
 					items[i-2] = new OrderItem(product, count);
 				}
 				
-				UpdateOrder(orderID, description, items);
+				updateOrder(orderID, description, items);
 			} catch (Exception ex) {
-				System.out.println("Parsing error.");
+				System.out.println(ex);
 			}
 		} else if (tokens[0].equals("remove")) {
 			try {
 				int id = Integer.parseInt(tokens[1]);
-				RemoveOrder(id);
+				removeOrder(id);
 			} catch (Exception ex) {
-				System.out.println("Parsing error.");
+				System.out.println(ex);
 			}
 		} else {
 			System.out.println("Command unrecognised.");
 		}
 	}
 	
-	public void PrintOrders() {
+	public void readOrders() {
 		System.out.println("Printing orders:");
 		System.out.println();
 		System.out.println("ID | date | description | item/count");
@@ -109,22 +109,22 @@ public class OrderManager implements IConsoleManager {
 		System.out.println();
 	}
 	
-	public Order GetOrder(int id) {
+	public Order getOrder(int id) {
 		return orders.get(id);
 	}
 	
-	public void AddOrder(String description, OrderItem[] orderItems) {
+	public void addOrder(String description, OrderItem[] items) {
 		int id = 1;
 		Set<Integer> orderIDs = orders.keySet();
 		if (!orderIDs.isEmpty())
 			id = Collections.max(orderIDs)+1;
 		
-		orders.put(id, new Order(description, orderItems));
+		orders.put(id, new Order(description, items));
 		System.out.println("Created new order with id " + id + ".");
 	}
 	
-	public void UpdateOrder(int id, String description, OrderItem[] items) {
-		Order order = GetOrder(id);
+	public void updateOrder(int id, String description, OrderItem[] items) {
+		Order order = getOrder(id);
 		if (order != null) {
 			order.description = description;
 			order.items = items;
@@ -135,8 +135,8 @@ public class OrderManager implements IConsoleManager {
 		}
 	}
 	
-	public void RemoveOrder(int id) {
-		Order order = GetOrder(id);
+	public void removeOrder(int id) {
+		Order order = getOrder(id);
 		if (order != null) {
 			orders.remove(id);
 			System.out.println("Deleted order with id " + id + "!");

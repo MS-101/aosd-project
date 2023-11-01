@@ -10,31 +10,34 @@ public class Console {
 		orderManager = new OrderManager(productManager);
 	}
 	
-	public boolean ReadCommand() {
+	public boolean readCommand() {
 		System.out.print("Write command (type 'help' for instructions): ");
-		return ParseCommand(input.nextLine());
+		return parseCommand(input.nextLine());
 	}
 	
-	public void PrintHelp() {
+	public void printHelp() {
 		System.out.println("Available basic commands:");
 		System.out.println("================================================================================================");
 		System.out.println("help - prints this message");
+		System.out.println("product <command> - use product commands (type 'product help' for more instructions)");
+		System.out.println("order <command> - use order commands (type 'order help' for more instructions)");
 		System.out.println("quit - terminate application");
-		System.out.println("order <command> - use orders commands (type 'orders help' for more instructions)");
-		System.out.println("inventorie <command> - use inventories commands (type 'inventories help' for more instructions)");
 	}
 	
-	public boolean ParseCommand(String command) {
+	public boolean parseCommand(String command) {
 		String[] tokens = command.split(" ");
 		
-		if (tokens[0] == "quit")
+		if (tokens[0].equals("quit")) {
+			System.out.println("Exiting application!");
+			
 			return false;
+		}
 		else if (tokens[0].equals("help"))
-			PrintHelp();
+			printHelp();
 		else if (tokens[0].equals("order"))
-			orderManager.ParseCommand(command.substring(tokens[0].length() + 1));
+			orderManager.parseCommand(command.substring(tokens[0].length() + 1));
 		else if (tokens[0].equals("product"))
-			productManager.ParseCommand(command.substring(tokens[0].length() + 1));
+			productManager.parseCommand(command.substring(tokens[0].length() + 1));
 		else
 			System.out.println("Command unrecognised.");
 		

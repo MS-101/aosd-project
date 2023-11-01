@@ -10,5 +10,4 @@ public class Order {
 		this.description = description;
 		this.items = items;
 	}
-	
 }
