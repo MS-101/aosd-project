@@ -4,12 +4,12 @@ import java.util.*;
 
 public class User {
 	String username;
-	String password;
+	String hashedPassword;
 	List<Role> roles = new LinkedList<>();
 	
-	public User(String username, String password) {
+	public User(String username, String hashedPassword) {
 		this.username = username;
-		this.password = password;
+		this.hashedPassword = hashedPassword;
 	}
 	
 	protected void addRole(Role role) {

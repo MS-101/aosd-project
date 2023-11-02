@@ -41,7 +41,7 @@ public aspect Authenticator {
 		System.out.print("password: ");
 		String password = scanner.nextLine();
 		
-		if (login(name, password)) {
+		if (login(name, PasswordSecurity.hashPassword(password))) {
 			System.out.println("Login successful!");
 			return true;
 		}
@@ -51,9 +51,9 @@ public aspect Authenticator {
 		}
 	}
 	
-	private boolean login(String name, String password) {
+	private boolean login(String name, String hashedPassword) {
 		User user = userManager.getUser(name);
-		if (user != null && user.password.equals(password)) {
+		if (user != null && user.hashedPassword.equals(hashedPassword)) {
 			currentUser = user;
 			return true;
 		}

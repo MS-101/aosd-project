@@ -1,6 +1,7 @@
 package Security;
 
 import java.time.*;
+
 import Logistics.*;
 
 public class AuditedProduct extends Product {
@@ -9,8 +10,8 @@ public class AuditedProduct extends Product {
 	User editedBy;
 	LocalDateTime editedDate;
 	
-	public AuditedProduct(String name, String description, User user) {
-		super(name, description);
+	public AuditedProduct(ProductType type, String name, String description, User user) {
+		super(type, name, description);
 		
 		createdBy = user;
 		createdDate = LocalDateTime.now();
@@ -35,8 +36,8 @@ public class AuditedProduct extends Product {
 	
     @Override
     public String toString() {
-    	return getName() + " (name) | " + getDescription() + " (description) | " 
-    			+ createdBy.username + " (createdBy) | " + createdDate + " (createdDate) | "
-    			+ editedBy.username + " (editedBy) | " + editedDate + " (editedDate)";
+    	return super.toString() + " | "
+			+ createdBy.username + " (createdBy) | " + createdDate + " (createdDate) | "
+			+ editedBy.username + " (editedBy) | " + editedDate + " (editedDate)";
     }
 }

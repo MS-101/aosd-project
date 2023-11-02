@@ -1,32 +1,44 @@
 package Logistics;
 
 public class Product {
-	 private String name;
-	 private String description;
+	public enum ProductType {
+		MACHINERY,
+		TOOLS,
+		MATERIALS,
+	}
 	
-	 public Product(String name, String description) {
-		 this.name = name;
-		 this.description = description;
-	 }
-	 
-	 public String getName() {
-		 return name;
-	 }
+	private ProductType type;
+	private String name;
+	private String description;
 
-	 public void setName(String name) {
-		 this.name = name;
-	 }
+	public Product(ProductType type, String name, String description) {
+		this.type = type;
+		this.name = name;
+		this.description = description;
+	}
+	
+	public ProductType getType() {
+		return type;
+	}
+ 
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+ 
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
 	 
-	 public String getDescription() {
-		 return description;
-	 }
-	 
-	 public void setDescription(String description) {
-		 this.description = description;
-	 }
-	 
-    @Override
-    public String toString() {
-        return name + " (name) | " + description + " (description)";
-    }
+	@Override
+	public String toString() {
+		return type.name() + " (type) | " + name + " (name) | " + description + " (description)";
+	}
 }

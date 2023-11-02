@@ -1,16 +1,15 @@
 package Security;
 
 import Logistics.*;
+import Logistics.Product.ProductType;
 
 public aspect Auditor {
-	public pointcut productConstructor(String username, String password) : call(Product.new(String, String)) && args(username, password);
-	public pointcut orderConstructor(String description, OrderItem[] items) : call(Order.new(String, OrderItem[])) && args(description, items);
+	public pointcut productConstructor(ProductType type, String name, String description) : call(Product.new(ProductType, String, String)) && args(type, name, description);
 	
-	Product around(String username, String password) : productConstructor(username, password) {
-		return new AuditedProduct(username, password, Authenticator.getCurrentUser());
-	}
-	
-	Order around(String description, OrderItem[] items) : orderConstructor(description, items) {
-		return new AuditedOrder(description, items, Authenticator.getCurrentUser());
+	Product around(ProductType type, String name, String description) : productConstructor(type, name, description) {
+		if (type == ProductType.MACHINERY || type == ProductType.TOOLS)
+			return new AuditedProduct(type, name, description, Authenticator.getCurrentUser());
+		else
+			return proceed(type, name, description);
 	}
 }

@@ -3,13 +3,15 @@ package Logistics;
 import java.util.*;
 import java.util.Map.Entry;
 
+import Logistics.Product.ProductType;
+
 public class ProductManager implements IConsoleManager {
 	private Map<Integer, Product> products = new HashMap<>();
 	
 	public ProductManager() {
-		products.put(1, new Product("product1", "Lorem ipsum"));
-		products.put(2, new Product("product2", "Lorem ipsum"));
-		products.put(3, new Product("product3", "Lorem ipsum"));
+		products.put(1, new Product(ProductType.MACHINERY, "someMachine", "description of machine"));
+		products.put(2, new Product(ProductType.TOOLS, "someTool", "description of tool"));
+		products.put(3, new Product(ProductType.MATERIALS, "someMaterial", "description of material"));
 	}
 	
 	public void printHelp() {
@@ -17,24 +19,27 @@ public class ProductManager implements IConsoleManager {
 		System.out.println("===========================");
 		System.out.println("product help - prints this message");
 		System.out.println("product read - prints all existing products");
-		System.out.println("product add name '<name>' description '<description>' - create new product");
+		System.out.println("product add type <ID> name '<name>' description '<description>' - create new product");
 		System.out.println("product update <ID> name '<name>' description '<description>' - update existing product");
 		System.out.println("product remove <ID> - delete existing product");
 	}
 	
 	public void parseCommand(String command) {
 		String[] tokens = command.split(" ");
-		if (tokens[0].equals("help"))
+		if (tokens[0].equals("help")) {
 			printHelp();
-		else if (tokens[0].equals("read"))
+		} else if (tokens[0].equals("read")) {
 			readProducts();
-		else if (tokens[0].equals("add")) {
+		} else if (tokens[0].equals("add")) {
 			try {
+				int idType = Integer.parseInt(tokens[2]);
+				ProductType type = ProductType.values()[idType];
+				
 				tokens = command.split("'");
 				String name = tokens[1];
 				String description = tokens[3];
 				
-				addProduct(name, description);
+				addProduct(type, name, description);
 			} catch (Exception ex) {
 				System.out.println(ex);
 			}
@@ -78,13 +83,13 @@ public class ProductManager implements IConsoleManager {
 		return products.get(id);
 	}
 	
-	public void addProduct(String name, String description) {
+	public void addProduct(ProductType type, String name, String description) {
 		int id = 1;
 		Set<Integer> productIDs = products.keySet();
 		if (!productIDs.isEmpty())
 			id = Collections.max(productIDs)+1;
 		
-		products.put(id, new Product(name, description));
+		products.put(id, new Product(type, name, description));
 		System.out.println("Created new product with id " + id + ".");
 	}
 	

@@ -7,13 +7,13 @@ public class UserManager {
 	private Map<String, User> users = new HashMap<>();
 	
 	public UserManager() {
-		User user1 = new User("John", "password123");
+		User user1 = new User("John", PasswordSecurity.hashPassword("password123"));
 		user1.addRole(roleManager.director);
 
-		User user2 = new User("Emily", "password");
+		User user2 = new User("Emily", PasswordSecurity.hashPassword("password"));
 		user2.addRole(roleManager.supplierManager);
 		
-		User user3 = new User("Bob", "weakPassword");
+		User user3 = new User("Bob", PasswordSecurity.hashPassword("weakPassword"));
 		user3.addRole(roleManager.procurementManager);
 		
 		addUser(user1);

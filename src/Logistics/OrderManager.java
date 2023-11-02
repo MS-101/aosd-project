@@ -23,11 +23,11 @@ public class OrderManager implements IConsoleManager {
 	
 	public void parseCommand(String command) {
 		String[] tokens = command.split(" ");
-		if (tokens[0].equals("help"))
+		if (tokens[0].equals("help")) {
 			printHelp();
-		else if (tokens[0].equals("read"))
+		} else if (tokens[0].equals("read")) {
 			readOrders();
-		else if (tokens[0].equals("add")) {
+		} else if (tokens[0].equals("add")) {
 			try {
 				tokens = command.split("'");
 				String description = tokens[1];
