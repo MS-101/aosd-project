@@ -10,7 +10,7 @@ public class PolicyManager {
 	
 	private static void loadPolicies() {
 		try {
-	        String filePath = "policies.json";
+	        String filePath = "config/policies.json";
 	        String jsonString = new String(Files.readAllBytes(Paths.get(filePath)));
 	        JSONArray jsonArray = new JSONArray(jsonString);
 

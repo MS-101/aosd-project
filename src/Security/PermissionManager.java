@@ -10,7 +10,7 @@ public class PermissionManager {
 	
 	private static void loadPermissions() {
 		try {
-	        String filePath = "permissions.json";
+	        String filePath = "config/permissions.json";
 	        String jsonString = new String(Files.readAllBytes(Paths.get(filePath)));
 	        JSONArray jsonArray = new JSONArray(jsonString);
 

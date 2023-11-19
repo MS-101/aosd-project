@@ -4,9 +4,9 @@ import java.util.*;
 import org.aspectj.lang.reflect.*;
 
 public aspect PolicyAccess {
-	pointcut allMethods() : execution(void *(..)) && !within(security.*);
+	private pointcut voidMethods() : execution(void *(..)) && !within(security.*);
 
-	void around() : allMethods() {
+	void around() : voidMethods() {
 		MethodSignature methodSignature = (MethodSignature)thisJoinPoint.getSignature();
 		String method = methodSignature.getName();
 	    

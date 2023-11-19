@@ -10,7 +10,7 @@ public class RoleManager {
 	
 	private static void loadRoles() {
 		try {
-	        String filePath = "roles.json";
+	        String filePath = "config/roles.json";
 	        String jsonString = new String(Files.readAllBytes(Paths.get(filePath)));
 	        JSONArray jsonArray = new JSONArray(jsonString);
 

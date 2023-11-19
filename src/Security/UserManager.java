@@ -10,7 +10,7 @@ public class UserManager {
 	
 	private static void loadUsers() {
 		try {
-	        String filePath = "users.json";
+	        String filePath = "config/users.json";
 	        String jsonString = new String(Files.readAllBytes(Paths.get(filePath)));
 	        JSONArray jsonArray = new JSONArray(jsonString);
 

@@ -1,31 +1,47 @@
 package security;
 
 import java.util.*;
+import org.aspectj.lang.reflect.*;
 
 public aspect Authenticator {
 	private static User currentUser = null;
 	
 	private Scanner scanner = new Scanner(System.in);
 
-	private pointcut main() : execution(void logistics.Main.main(String[]));
-	private pointcut printHelp() : execution(void logistics.Console.printHelp());
-	private pointcut parseCommand(String command) : execution(boolean logistics.Console.parseCommand(String)) && args(command);
+	private pointcut voidMethods() : execution(void *(..)) && !within(security.*);
+	private pointcut parserMethods(String command) : execution(boolean *(String)) && args(command) && !within(security.*);
 	
-	before() : main() {
-		while (!requestLogin());
+	before() : voidMethods() {
+		MethodSignature methodSignature = (MethodSignature)thisJoinPoint.getSignature();
+		String method = methodSignature.getDeclaringTypeName() + "." + methodSignature.getName();
+		
+		// authenticate before starting program
+		if (method.equals(BasicSettings.getMain())) {
+			while (!requestLogin());	
+		}
 	}
 	
-	after() : printHelp() {
-		System.out.println("logout - logout from the current account");
+	after() : voidMethods() {
+		MethodSignature methodSignature = (MethodSignature)thisJoinPoint.getSignature();
+		String method = methodSignature.getDeclaringTypeName() + "." + methodSignature.getName();
+		
+		// print extra help command for logout
+		if (method.equals(BasicSettings.getHelp())) {
+			System.out.println("logout - logout from the current account");	
+		}
 	}
 	
-	boolean around(String command) : parseCommand(command) {
-		if (command.equals("logout")) {
+	boolean around(String command) : parserMethods(command) {
+		MethodSignature methodSignature = (MethodSignature)thisJoinPoint.getSignature();
+		String method = methodSignature.getDeclaringTypeName() + "." + methodSignature.getName();
+		
+		// parse logout command
+		if (method.equals(BasicSettings.getParser()) && command.equals("logout")) {
 			logout();
 			return true;
-		} else {
-			return proceed(command);
 		}
+		
+		return proceed(command);
 	}
 	
 	private void logout() {
