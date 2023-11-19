@@ -1,11 +1,38 @@
-package Security;
+package security;
+
+import java.nio.file.*;
+import java.util.*;
+import org.json.*;
 
 public class PermissionManager {
-	static final Permission productRead = new Permission("productRead", "permission to read products.");
-	static final Permission productAdd = new Permission("productAdd", "permission to create new products.");
-	static final Permission productUpdate = new Permission("productUpdate", "permission to update or delete existing products.");
+	private static Map<String, Permission> permissions = new HashMap<>();
+	private static boolean permissionsLoaded = false;
 	
-	static final Permission orderRead = new Permission("orderRead", "permission to read orders.");
-	static final Permission orderAdd = new Permission("orderRead", "permission to create new orders.");
-	static final Permission orderUpdate = new Permission("orderUpdate", "permission to update or delete existing orders.");
+	private static void loadPermissions() {
+		try {
+	        String filePath = "permissions.json";
+	        String jsonString = new String(Files.readAllBytes(Paths.get(filePath)));
+	        JSONArray jsonArray = new JSONArray(jsonString);
+
+	        for (int i = 0; i < jsonArray.length(); i++) {
+	            JSONObject jsonObject = jsonArray.getJSONObject(i);
+
+	            String name = jsonObject.getString("name");
+	            String description = jsonObject.getString("description");
+
+	            Permission permission = new Permission(name, description);
+	            permissions.put(permission.name, permission);
+	        }
+		} catch (Exception ex) {
+			System.out.println("Error occured while reading permission configuration.");
+		} finally {
+			permissionsLoaded = true;
+		}
+	}
+	
+	public static Permission getPermission(String name) {
+		if (!permissionsLoaded)
+			loadPermissions();
+		return permissions.get(name);
+	}
 }

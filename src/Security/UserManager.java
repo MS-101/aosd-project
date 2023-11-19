@@ -1,31 +1,45 @@
-package Security;
+package security;
 
 import java.util.*;
+import java.nio.file.*;
+import org.json.*;
 
 public class UserManager {
-	private RoleManager roleManager = new RoleManager();
-	private Map<String, User> users = new HashMap<>();
+	private static Map<String, User> users = new HashMap<>();
+	private static boolean usersLoaded = false;
 	
-	public UserManager() {
-		User user1 = new User("John", PasswordSecurity.hashPassword("password123"));
-		user1.addRole(roleManager.director);
+	private static void loadUsers() {
+		try {
+	        String filePath = "users.json";
+	        String jsonString = new String(Files.readAllBytes(Paths.get(filePath)));
+	        JSONArray jsonArray = new JSONArray(jsonString);
 
-		User user2 = new User("Emily", PasswordSecurity.hashPassword("password"));
-		user2.addRole(roleManager.supplierManager);
-		
-		User user3 = new User("Bob", PasswordSecurity.hashPassword("weakPassword"));
-		user3.addRole(roleManager.procurementManager);
-		
-		addUser(user1);
-		addUser(user2);
-		addUser(user3);
+	        for (int i = 0; i < jsonArray.length(); i++) {
+	            JSONObject jsonObject = jsonArray.getJSONObject(i);
+
+	            String username = jsonObject.getString("username");
+	            String password = jsonObject.getString("password");
+	            JSONArray roles = jsonObject.getJSONArray("roles");
+
+	            User user = new User(username, password);
+                for (int j = 0; j < roles.length(); j++) {
+                    String roleName = roles.getString(j);
+                    Role role = RoleManager.getRole(roleName);
+                    if (role != null)
+                    	user.addRole(role);
+                }
+                users.put(user.username, user);
+	        }
+		} catch (Exception ex) {
+			System.out.println("Error occured while reading user configuration.");
+		} finally {
+			usersLoaded = true;
+		}
 	}
 	
-	public User getUser(String username) {
+	public static User getUser(String username) {
+		if (!usersLoaded)
+			loadUsers();
 		return users.get(username);
-	}
-	
-	private void addUser(User user) {
-		users.put(user.username, user);
 	}
 }

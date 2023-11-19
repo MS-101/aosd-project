@@ -1,9 +1,9 @@
-package Logistics;
+package logistics;
 
 import java.util.*;
 import java.util.Map.Entry;
 
-import Logistics.Product.ProductType;
+import logistics.Product.ProductType;
 
 public class ProductManager implements IConsoleManager {
 	private Map<Integer, Product> products = new HashMap<>();
@@ -34,11 +34,11 @@ public class ProductManager implements IConsoleManager {
 			try {
 				int idType = Integer.parseInt(tokens[2]);
 				ProductType type = ProductType.values()[idType];
-				
+
 				tokens = command.split("'");
 				String name = tokens[1];
 				String description = tokens[3];
-				
+
 				addProduct(type, name, description);
 			} catch (Exception ex) {
 				System.out.println(ex);
@@ -50,7 +50,7 @@ public class ProductManager implements IConsoleManager {
 				tokens = command.split("'");
 				String name = tokens[1];
 				String description = tokens[3];
-				
+
 				updateProduct(id, name, description);
 			} catch (Exception ex) {
 				System.out.println(ex);
@@ -88,7 +88,7 @@ public class ProductManager implements IConsoleManager {
 		Set<Integer> productIDs = products.keySet();
 		if (!productIDs.isEmpty())
 			id = Collections.max(productIDs)+1;
-		
+
 		products.put(id, new Product(type, name, description));
 		System.out.println("Created new product with id " + id + ".");
 	}

@@ -4,42 +4,41 @@ import java.nio.file.*;
 import java.util.*;
 import org.json.*;
 
-public class RoleManager {
-	private static Map<String, Role> roles = new HashMap<>();
-	private static boolean rolesLoaded = false;
+public class PolicyManager {
+	private static Map<String, Policy> policies = new HashMap<>();
+	private static boolean policiesLoaded = false;
 	
-	private static void loadRoles() {
+	private static void loadPolicies() {
 		try {
-	        String filePath = "roles.json";
+	        String filePath = "policies.json";
 	        String jsonString = new String(Files.readAllBytes(Paths.get(filePath)));
 	        JSONArray jsonArray = new JSONArray(jsonString);
 
 	        for (int i = 0; i < jsonArray.length(); i++) {
 	            JSONObject jsonObject = jsonArray.getJSONObject(i);
 
-	            String name = jsonObject.getString("name");
-	            String description = jsonObject.getString("description");
+	            String method = jsonObject.getString("method");
 	            JSONArray permissions = jsonObject.getJSONArray("permissions");
 
-	            Role role = new Role(name, description);
+	            Policy policy = new Policy(method);
                 for (int j = 0; j < permissions.length(); j++) {
                     String permissionName = permissions.getString(j);
                     Permission permission = PermissionManager.getPermission(permissionName);
                     if (permission != null)
-                    	role.addPermission(permission);
+                    	policy.addPermission(permission);
                 }
-                roles.put(role.name, role);
-	        }			
+                policies.put(policy.method, policy);
+	        }
 		} catch (Exception ex) {
-			System.out.println("Error occured while reading role configuration.");
+			System.out.println("Error occured while reading policy configuration.");
 		} finally {
-			rolesLoaded = true;
+			policiesLoaded = true;
 		}
 	}
 	
-	public static Role getRole(String name) {
-		if (!rolesLoaded)
-			loadRoles();
-		return roles.get(name);
+	public static Policy getPolicy(String name) {
+		if (!policiesLoaded)
+			loadPolicies();
+		return policies.get(name);
 	}
 }

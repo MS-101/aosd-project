@@ -1,45 +1,31 @@
-package Security;
+package security;
 
-import Logistics.*;
+import java.util.*;
+import org.aspectj.lang.reflect.*;
 
 public aspect PolicyAccess {
-	pointcut productRead() : execution(void ProductManager.readProducts(..));
-	pointcut productAdd() : execution(void ProductManager.addProduct(..));
-	pointcut productUpdate() : execution(void ProductManager.updateProduct(..));
-	pointcut productRemove() : execution(void ProductManager.RemoveProduct(..));
+	pointcut allMethods() : execution(void *(..)) && !within(security.*);
 
-	pointcut orderRead() : execution(void Logistics.OrderManager.readOrders(..));
-	pointcut orderAdd() : execution(void Logistics.OrderManager.addOrder(..));
-	pointcut orderUpdate() : execution(void Logistics.OrderManager.updateOrder(..));
-	pointcut orderRemove() : execution(void Logistics.OrderManager.removeOrder(..));
-
-	void around() : productRead() {
-		if (Authenticator.hasPermission(PermissionManager.productRead))
-			proceed();
-	}
+	void around() : allMethods() {
+		MethodSignature methodSignature = (MethodSignature)thisJoinPoint.getSignature();
+		String method = methodSignature.getName();
+	    
+		Policy policy = PolicyManager.getPolicy(method);
+		if (policy != null) {
+			boolean permissionMissing = false;
+			
+		    for (Map.Entry<String, Permission> entry : policy.permissions.entrySet()) {
+		    	Permission permission = entry.getValue();
+		    	if (!Authenticator.hasPermission(permission)) {
+		    		System.out.println("You don't have the required permission - " + permission.name + " (" + permission.description + ") !");
+		    		permissionMissing = true;
+		    	}
+		    }
+		    
+		    if (permissionMissing)
+		    	return;
+		}
 	
-	void around() : productAdd() {
-		if (Authenticator.hasPermission(PermissionManager.productAdd))
-			proceed();
-	}
-	
-	void around() : productUpdate() || productRemove() {
-		if (Authenticator.hasPermission(PermissionManager.productUpdate))
-			proceed();
-	}
-	
-	void around() : orderRead() {
-		if (Authenticator.hasPermission(PermissionManager.orderRead))
-			proceed();
-	}
-	
-	void around() : orderAdd() {
-		if (Authenticator.hasPermission(PermissionManager.orderAdd))
-			proceed();
-	}
-	
-	void around() : orderUpdate() || orderRemove() {
-		if (Authenticator.hasPermission(PermissionManager.orderUpdate))
-			proceed();
+		proceed();
 	}
 }

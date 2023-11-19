@@ -1,4 +1,4 @@
-package Logistics;
+package logistics;
 
 public class OrderItem {
 	private Product product;

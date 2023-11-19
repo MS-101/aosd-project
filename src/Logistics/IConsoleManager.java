@@ -1,4 +1,4 @@
-package Logistics;
+package logistics;
 
 public interface IConsoleManager {
 	public void printHelp();
